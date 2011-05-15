@@ -1,3 +1,16 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.push File.join(File.dirname(__FILE__), "/../lib")
 require 'tictactoe_client'
+
+player = TicTacToeClient::Player.new(ARGV[0], ARGV[1])
+
+player.register
+
+puts "Welcome #{player.name}!"
+puts "Type help for a list of available commands."
+
+play = true
+
+player.wait
+
+puts 'Begin game'

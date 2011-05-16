@@ -18,7 +18,7 @@ module TicTacToeClient
       if response['errors']
         raise Exception, response['errors']['error']
       else
-        @id = user['user']['id']
+        @id = response['user']['id']
       end
     end
     

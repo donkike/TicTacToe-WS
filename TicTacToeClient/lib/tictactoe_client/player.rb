@@ -22,8 +22,17 @@ module TicTacToeClient
       end
     end
     
+    def unregister
+      Server.delete(server + '/users/' + @id.to_s)
+    end
+    
     def begin(with_player)
-      @game = Server.post(server + '/games', {:body => {:game => {:player1 => @name, :player2 => with_player}}}).parsed_response
+      response = Server.post(server + '/games', {:body => {:game => {:player1 => @name, :player2 => with_player}}}).parsed_response
+      if response['errors']
+        raise Exception, response['errors']['error']
+      else
+        @game = response
+      end
     end
     
     def list
@@ -31,10 +40,15 @@ module TicTacToeClient
     end
     
     def wait
-      while not @playing
-        sleep(5)
-        @playing = Server.get(server + '/users/' + @id.to_s + '.xml').parsed_response['user']['playing']
-      end
+      begin
+        register
+        while not @playing
+          sleep(5)
+          @playing = Server.get(server + '/users/' + @id.to_s + '.xml').parsed_response['user']['playing']
+        end
+      rescue Exception => e
+        puts "Error registering player: #{e.message}"
+      end      
     end
     
   end

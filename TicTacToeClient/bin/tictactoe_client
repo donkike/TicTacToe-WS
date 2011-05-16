@@ -4,12 +4,6 @@ require 'tictactoe_client'
 
 player = TicTacToeClient::Player.new(ARGV.shift, ARGV.shift)
 
-begin
-  player.register
-rescue Exception => e
-  puts "Error registering player: #{e.message}"
-end
-
 menu = TicTacToeClient::Menu.new(player)
 menu.begin
     

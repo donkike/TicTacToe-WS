@@ -21,4 +21,9 @@ class UsersController < ApplicationController
     end
   end
   
+  def destroy
+    User.find(params[:id]).delete
+    render :xml => {} 
+  end
+  
 end

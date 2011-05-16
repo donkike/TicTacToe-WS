@@ -3,8 +3,13 @@ class GamesController < ApplicationController
   respond_to :xml
   
   def create
-    @game = Game.create(params[:id])
-    render :xml => @game, :only => [:player1, :player2, :board]
+    @game = Game.new(params[:game])
+    if @game.valid?
+      @game.save
+      render :xml => @game, :only => [:player1, :player2, :board]
+    else
+      render :xml => @game.errors, :status => :unprocessable_entity
+    end
   end
   
 end

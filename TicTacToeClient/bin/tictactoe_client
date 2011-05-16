@@ -3,10 +3,12 @@ $LOAD_PATH.push File.join(File.dirname(__FILE__), "/../lib")
 require 'tictactoe_client'
 
 player = TicTacToeClient::Player.new(ARGV.shift, ARGV.shift)
-player.register
 
-puts "Welcome #{player.name}!"
-puts "Type help for a list of available commands.\n\n"
+begin
+  player.register
+rescue Exception => e
+  puts "Error registering player: #{e.message}"
+end
 
 menu = TicTacToeClient::Menu.new(player)
 menu.begin

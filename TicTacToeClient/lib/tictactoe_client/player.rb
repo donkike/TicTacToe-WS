@@ -14,8 +14,12 @@ module TicTacToeClient
     end    
     
     def register
-      user = Server.post(server + '/users', {:body => {:user => {:name => name}}}).parsed_response
-      @id = user['user']['id']
+      response = Server.post(server + '/users', {:body => {:user => {:name => name}}}).parsed_response
+      if response['errors']
+        raise Exception, response['errors']['error']
+      else
+        @id = user['user']['id']
+      end
     end
     
     def begin(with_player)

@@ -13,8 +13,12 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.create(params[:user])
-    render :xml => @user, :only => [:id, :name, :playing]
+    @user = User.new(params[:user])
+    if @user.save
+      render :xml => @user, :only => [:id, :name, :playing]
+    else
+      render :xml => @user.errors, :status => :unprocessable_entity
+    end
   end
   
 end

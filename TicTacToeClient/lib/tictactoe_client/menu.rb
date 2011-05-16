@@ -9,7 +9,9 @@ module TicTacToeClient
       @active = true
     end
     
-    def begin
+    def begin      
+      puts "Welcome #{player.name}!"
+      puts "Type help for a list of available commands.\n\n"
       while @active
         command = gets.strip
         if respond_to?(command)
@@ -18,7 +20,8 @@ module TicTacToeClient
           puts "#{command} is not a valid command."
         end
         puts
-      end      
+      end  
+      puts 'Bye'    
     end    
   
     def list

@@ -1,9 +1,17 @@
 class Game < ActiveRecord::Base
   
   validate :not_same_player
-  validates :player1, :player2, :player_not_playing => true
   
   after_create :update_players
+
+  def play(move)
+    if move[:turn].to_i == self.turn
+       self.board[move[:move].to_i] = (move[:turn].to_i + 1).to_s
+       self.turn = (self.turn + 1) % 2
+    else
+       false
+    end
+  end
   
   private
   def not_same_player
@@ -11,12 +19,9 @@ class Game < ActiveRecord::Base
   end
   
   def update_players
-    user1 = User.find_by_name(player1)
-    user1.playing = true
-    user1.save
-    user2 = User.find_by_name(player2)
-    user2.playing = true
-    user2.save
+    user = User.find_by_name(player2)
+    user.playing = true
+    user.save
   end
   
 end

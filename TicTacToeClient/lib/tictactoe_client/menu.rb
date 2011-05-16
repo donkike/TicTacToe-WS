@@ -22,13 +22,21 @@ module TicTacToeClient
         puts
       end  
       puts 'Bye'    
+    end
+
+    def paint
+      board = @player.game['board']
+      (0..3).each do |i| 
+         puts [board[i*3], board[i*3+1], board[i*3+2]].join(" ")
+      end
     end   
     
     def play(player = nil)
       if player
         begin
-          @player.register
           @player.begin(player)
+          paint
+          playing
         rescue Exception => e
           puts "Error beginning game: #{e.message}"
         end
@@ -48,11 +56,32 @@ module TicTacToeClient
     def wait(*args)
       puts 'Waiting for a player invitation...'
       @player.wait
+      puts "Playing with #{@player.game['player1']}"
+      paint
+      playing
     end
     
+    def move(move)
+       @player.move(move)
+       paint
+    end
+
     def quit(*args)
-      @player.unregister
       @active = false
+    end
+
+    def playing
+      while @player.playing
+        if @player.turn == @player.game['turn'].to_i
+	   puts 'Make your move'
+           paint
+	   move = gets.strip
+	   @player.move(move)
+        else
+	   @player.refresh_game
+	   sleep(5)
+        end
+      end
     end
   
     def help(*args)

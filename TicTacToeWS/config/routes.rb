@@ -1,5 +1,5 @@
 TicTacToeWS::Application.routes.draw do
-  
+  match 'games/get_by_name/:name' => 'games#get_by_name'  
   resources :users
   resources :games
   

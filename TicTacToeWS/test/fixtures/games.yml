@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  player1: MyString
+  player2: MyString
+  board: MyString
+
+two:
+  player1: MyString
+  player2: MyString
+  board: MyString

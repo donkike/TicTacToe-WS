@@ -1,4 +1,4 @@
-require 'tictactoe_client/game'
+require 'tictactoe_client/server'
 
 module TicTacToeClient
   class Player
@@ -9,21 +9,27 @@ module TicTacToeClient
       @name = name
       @server = server
       @playing = false
+      @id = nil
+      @game = nil
     end    
     
     def register
-      user = Game.post(server + '/users', {:body => {:user => {:name => name}}}).parsed_response
+      user = Server.post(server + '/users', {:body => {:user => {:name => name}}}).parsed_response
       @id = user['user']['id']
     end
     
-    def begin
-      
+    def begin(with_player)
+      @game = Server.post(server + '/games', {:body => {:game => {:player1 => @name, :player2 => with_player}}}).parsed_response
+    end
+    
+    def list
+      Server.get(server + '/users.xml').parsed_response
     end
     
     def wait
       while not @playing
         sleep(5)
-        @playing = Game.get(server + '/users/' + @id.to_s + '.xml').parsed_response['user']['playing']
+        @playing = Server.get(server + '/users/' + @id.to_s + '.xml').parsed_response['user']['playing']
       end
     end
     

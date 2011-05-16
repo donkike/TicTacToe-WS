@@ -1,6 +1,6 @@
 module TicTacToeClient
   
-  class Game
+  class Server
    include HTTParty       
   end
   

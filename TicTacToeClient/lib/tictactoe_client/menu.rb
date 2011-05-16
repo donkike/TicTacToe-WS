@@ -10,7 +10,7 @@ module TicTacToeClient
     end
     
     def begin      
-      puts "Welcome #{player.name}!"
+      puts "Welcome #{@player.name}!"
       puts "Type help for a list of available commands.\n\n"
       while @active
         command = gets.strip

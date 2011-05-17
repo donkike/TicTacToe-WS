@@ -23,7 +23,7 @@ class GamesController < ApplicationController
   def update
     @game = Game.find(params[:id])
     @game.play(params[:game])
-    @game.update_attributes(:board => @game.board, :turn => @game.turn)
+    @game.save
     render :xml => @game, :only => [:id, :player1, :player2, :board, :turn]
   end
 

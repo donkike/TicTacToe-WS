@@ -36,13 +36,13 @@ module TicTacToeClient
         begin
           @player.begin(player)
           paint
-          playing
         rescue Exception => e
           puts "Error beginning game: #{e.message}"
         end
       else
         puts "No player selected"
-      end
+      end      
+      playing
     end 
   
     def list(*args)
@@ -73,13 +73,13 @@ module TicTacToeClient
     def playing
       while @player.playing
         if @player.turn == @player.game['turn'].to_i
-	   puts 'Make your move'
-           paint
-	   move = gets.strip
-	   @player.move(move)
+	        puts 'Make your move'
+          paint
+	        move = gets.strip
+	        @player.move(move.to_i)
         else
-	   @player.refresh_game
-	   sleep(5)
+	        @player.refresh_game
+	        sleep(5)
         end
       end
     end

@@ -16,14 +16,13 @@ class GamesController < ApplicationController
     if @game = Game.find(params[:id])
       respond_with @game
     else
-      render :xml => {} 
+      render :xml => {}
     end 
   end
 
   def update
     @game = Game.find(params[:id])
-    @game.play(params[:game])
-    @game.save
+    @game.update_attributes(params[:game])
     render :xml => @game, :only => [:id, :player1, :player2, :board, :turn]
   end
 

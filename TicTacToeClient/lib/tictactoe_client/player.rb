@@ -27,13 +27,13 @@ module TicTacToeClient
     end
     
     def begin(with_player)
-      response = Server.post(server + '/games', {:body => {:game => {:player1 => @name, :player2 => with_player}}}).parsed_response['game']
+      response = Server.post(server + '/games', {:body => {:game => {:player1 => @name, :player2 => with_player}}}).parsed_response
       if response['errors']
         raise Exception, response['errors']['error']
       else
-        @game = response
-	@turn = 0
-	@playing = true
+        @game = response['game']
+	      @turn = 0
+        @playing = true
       end
     end
     
@@ -48,16 +48,17 @@ module TicTacToeClient
           sleep(5)
           @playing = Server.get(server + '/users/' + @id.to_s + '.xml').parsed_response['user']['playing']
         end
-	unregister
-	@game = Server.get(server + '/games/get_by_name/' + @name).parsed_response['game']
-	@turn = 1
+	      unregister
+	      @game = Server.get(server + '/games/get_by_name/' + @name).parsed_response['game']
+	      @turn = 1
       rescue Exception => e
         puts "Error registering player: #{e.message}"
       end      
     end
     
     def move(move)
-      @game = Server.put(server + '/games/' + @game['id'].to_s, {:body => {:game => {:move => move, :turn => @turn}}}).parsed_response['game']
+      @game['board'][move] = (@turn + 1).to_s
+      @game = Server.put(server + '/games/' + @game['id'].to_s, {:body => {:game => {:board => @game['board'], :turn => (@turn + 1) % 2}}}).parsed_response['game']
     end
     
     def refresh_game

@@ -1,12 +1,14 @@
 class Game < ActiveRecord::Base
   
+  attr_accessible :player1, :player2, :turn, :board
+  
   after_create :update_players
 
   def play(move)
     if move[:turn].to_i == turn      
-       board[move[:move].to_i] = (move[:turn].to_i + 1).to_s
-       turn = (self.turn + 1) % 2
-       update_attributes({:board => board, :turn => turn})
+       self.board[move[:move].to_i] = (move[:turn].to_i + 1).to_s
+       self.turn = (self.turn + 1) % 2
+       true
     else
        false
     end

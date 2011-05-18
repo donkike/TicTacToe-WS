@@ -3,7 +3,8 @@ require 'tictactoe_client/server'
 module TicTacToeClient
   class Player
     
-    attr_reader :name, :server, :game, :playing, :turn
+    attr_reader :name, :server, :game, :turn
+    attr_accessor :playing
     
     def initialize(name, server)
       @name = name
@@ -39,6 +40,10 @@ module TicTacToeClient
     
     def list
       Server.get(server + '/users.xml').parsed_response
+    end
+    
+    def end_game
+      Server.delete(server + '/games/' + @game['id'].to_s)
     end
     
     def wait

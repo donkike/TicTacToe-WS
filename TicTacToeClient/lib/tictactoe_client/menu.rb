@@ -7,6 +7,7 @@ module TicTacToeClient
     def initialize(player)
       @player = player
       @active = true
+      @repr = %w[X O]
     end
     
     def begin      
@@ -23,67 +24,79 @@ module TicTacToeClient
       end  
       puts 'Bye'    
     end
+    
+    def show(i)
+      @player.game['board'][i] == '0' ? (i + 1) : @repr[@player.game['board'][i].to_i - 1]
+    end
 
     def paint
-      board = @player.game['board']
-      has_finished(board)
-      (0..3).each do |i| 
-         puts [board[i*3], board[i*3+1], board[i*3+2]].join(" ")
-      end
-    end   
+      puts <<-BOARD
+           |     |     
+        #{show(0)}  |  #{show(1)}  |  #{show(2)} 
+           |     |  
+      -----+-----+-----
+           |     |
+        #{show(3)}  |  #{show(4)}  |  #{show(5)}
+           |     |   
+      -----+-----+-----
+        #{show(6)}  |  #{show(7)}  |  #{show(8)}
+           |     |   
+      BOARD
+    end  
 
     def has_finished(board)
       if (board[0] == board[1] && board[1] == board[2] && board[0] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[3] == board[4] && board[4] == board[5] && board[3] == '1')
-	puts 'Player 1 won'
+        return 1
       end
       if (board[6] == board[7] && board[7] == board[7] && board[6] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[0] == board[3] && board[3] == board[6] && board[0] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[1] == board[4] && board[4] == board[7] && board[1] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[2] == board[5] && board[5] == board[8] && board[2] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[0] == board[4] && board[4] == board[8] && board[0] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[2] == board[4] && board[4] == board[6] && board[2] == '1')
-	puts 'Player 1 won'
+	      return 1
       end
       if (board[0] == board[1] && board[1] == board[2] && board[0] == '2')
-	puts 'Player 2 won'
+          return 2
       end
       if (board[3] == board[4] && board[4] == board[5] && board[3] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[6] == board[7] && board[7] == board[7] && board[6] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[0] == board[3] && board[3] == board[6] && board[0] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[1] == board[4] && board[4] == board[7] && board[1] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[2] == board[5] && board[5] == board[8] && board[2] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[0] == board[4] && board[4] == board[8] && board[0] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
       if (board[2] == board[4] && board[4] == board[6] && board[2] == '2')
-	puts 'Player 2 won'
+	        return 2
       end
-      if !(board.include? '0')
-	puts 'Game tied'
+      unless board.include?('0')
+          return -1
       end
+      0
     end    
 
     def play(player = nil)
@@ -131,14 +144,27 @@ module TicTacToeClient
 	        puts 'Make your move'
           paint
 	        move = gets.strip
-	        @player.move(move.to_i)
+	        @player.move(move.to_i - 1)
+	        paint
+	        puts "Waiting for next player..."
         else
 	        @player.refresh_game
 	        sleep(2)
         end
-	if (has_finished(@player.game['board']) != nil)
-		@player.playing = false
-	end
+        status = has_finished(@player.game['board'])
+	      if status != 0
+	        @player.refresh_game
+	        paint
+	        if status == @player.turn + 1
+	          puts "You win!"
+	        elsif status == -1
+	          puts "It's a tie"
+	        else
+	          puts "You lose..."
+	        end
+	        @player.end_game if @player.turn == @player.game['turn'].to_i 
+		      @player.playing = false
+	      end
       end
     end
   

@@ -25,6 +25,11 @@ class GamesController < ApplicationController
     @game.update_attributes(params[:game])
     render :xml => @game, :only => [:id, :player1, :player2, :board, :turn]
   end
+  
+  def destroy
+    Game.find(params[:id]).delete
+    render :xml => {}
+  end
 
   def get_by_name
     @game = Game.find_by_player1(params[:name]) || Game.find_by_player2(params[:name])
